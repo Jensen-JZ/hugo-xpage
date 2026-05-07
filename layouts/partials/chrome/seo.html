@@ -1,0 +1,45 @@
+{{- /*
+  Shared SEO meta — description, Open Graph, Twitter card, canonical, RSS link.
+
+  Inputs (resolved per-page):
+    .Title (or fallback to site title)
+    .Params.decks.en (post deck) | site.Params.description (homepage / fallback)
+    .Permalink (canonical) | site.Params.homepageURL (homepage)
+    .Params.heroImage / .Params.ogImage | site.Params.ogImage (fallback)
+    page kind: home / section / page / 404
+*/ -}}
+
+{{- $title := default site.Title .Title -}}
+{{- $desc := site.Params.description -}}
+{{- with .Params.decks }}{{- with .en }}{{- $desc = . -}}{{- end -}}{{- end -}}
+{{- with .Params.description }}{{- $desc = . -}}{{- end -}}
+{{- $canonical := .Permalink -}}
+{{- if eq .Kind "home" }}{{- $canonical = site.Params.homepageURL -}}{{- end -}}
+{{- $ogImage := site.Params.ogImage -}}
+{{- with .Params.ogImage }}{{- $ogImage = . -}}{{- end -}}
+{{- $ogType := "website" -}}
+{{- if eq .Kind "page" }}{{- $ogType = "article" -}}{{- end -}}
+
+<meta name="description" content="{{ $desc }}" />
+<meta name="keywords" content="{{ site.Params.keywords }}" />
+<meta name="author" content="{{ site.Params.author }}" />
+<link rel="canonical" href="{{ $canonical }}" />
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} — RSS" href="{{ "index.xml" | absURL }}" />
+
+<meta property="og:title" content="{{ $title }}" />
+<meta property="og:description" content="{{ $desc }}" />
+<meta property="og:type" content="{{ $ogType }}" />
+<meta property="og:url" content="{{ $canonical }}" />
+<meta property="og:site_name" content="{{ site.Title }}" />
+<meta property="og:image" content="{{ $ogImage }}" />
+<meta property="og:image:alt" content="{{ site.Params.author }}" />
+{{- if eq $ogType "article" }}
+{{- with .Params.bylineDate }}<meta property="article:published_time" content="{{ . }}" />{{- end }}
+<meta property="article:author" content="{{ site.Params.author }}" />
+{{- end }}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ $title }}" />
+<meta name="twitter:description" content="{{ $desc }}" />
+<meta name="twitter:image" content="{{ $ogImage }}" />
+{{- with site.Params.twitterHandle }}<meta name="twitter:creator" content="{{ . }}" />{{- end }}

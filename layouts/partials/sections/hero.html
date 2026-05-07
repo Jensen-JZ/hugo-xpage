@@ -1,0 +1,64 @@
+{{/* Hero header. First/last name from params; eyebrow/sub/meta labels from i18n;
+     meta values from params (city pairs, etc., not language-dependent). */}}
+{{- $en := site.Data.i18n.en -}}
+<header class="hero">
+  <div class="hero__left">
+    <div class="hero__eyebrow">
+      <span data-i18n="hero.eyebrow1">{{ index $en "hero.eyebrow1" }}</span>
+      <span><span data-i18n="hero.ver">{{ index $en "hero.ver" }}</span><b>{{ site.Params.heroVer }}</b></span>
+      <span><span data-i18n="hero.status">{{ index $en "hero.status" }}</span><b id="local-time">—</b></span>
+    </div>
+
+    <h1 class="hero__title" id="heroTitle">
+      <span class="word"><span class="glyph">{{ site.Params.heroFirstName }}</span></span>
+      <span class="word"><span class="glyph">{{ site.Params.heroLastName }}</span></span>
+    </h1>
+
+    <p class="hero__sub" data-i18n="hero.sub">{{ index $en "hero.sub" }}</p>
+
+    <div class="hero__type">
+      <b id="typer" data-i18n-skip>{{ site.Params.heroTyper | safeHTML }}</b><span class="caret"></span>
+    </div>
+
+    <div class="hero__meta">
+      <span><span data-i18n="hero.meta.based">{{ index $en "hero.meta.based" }}</span><b>{{ site.Params.heroBased }}</b></span>
+      <span><span data-i18n="hero.meta.field">{{ index $en "hero.meta.field" }}</span><b>{{ site.Params.heroField }}</b></span>
+      <span><span data-i18n="hero.meta.working">{{ index $en "hero.meta.working" }}</span><b>{{ site.Params.heroWorking }}</b></span>
+      <span><span data-i18n="hero.meta.channel">{{ index $en "hero.meta.channel" }}</span><b>{{ site.Params.heroChannel }}</b></span>
+    </div>
+
+    <div class="scroll-cue">
+      <span data-i18n="hero.scroll">{{ index $en "hero.scroll" }}</span>
+      <span class="arrow"></span>
+      <span data-i18n="hero.long">{{ index $en "hero.long" }}</span>
+    </div>
+  </div>
+
+  <div class="hero__right">
+    <div class="disc" aria-hidden="true">
+      <svg class="disc__svg" viewBox="0 0 500 500">
+        <polygon class="disc__hex"
+                 points="250,30 414.5,125 414.5,315 250,410 85.5,315 85.5,125" />
+        <polygon class="disc__pent"
+                 points="250,70 421.2,194.4 355.8,395.6 144.2,395.6 78.8,194.4" />
+        <g class="disc__dots">
+          <circle cx="250"   cy="70"    r="5" />
+          <circle cx="421.2" cy="194.4" r="5" />
+          <circle cx="355.8" cy="395.6" r="5" />
+          <circle cx="144.2" cy="395.6" r="5" />
+          <circle cx="78.8"  cy="194.4" r="5" />
+        </g>
+      </svg>
+      <div class="disc__center">
+        <div>
+          <div class="disc__clock">
+            <span id="disc-hm">—</span><span class="seconds" id="disc-ss">—</span>
+          </div>
+          <div class="disc__date" id="disc-date">—</div>
+          <div class="disc__sub">UTC<b id="utc-offset-hero">+8</b> · <span data-i18n="disc.locale">{{ index $en "disc.locale" }}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="disc-caption" data-i18n="disc.caption" data-i18n-html>Tap the disc <b>↻</b> to re-read the clock</div>
+  </div>
+</header>

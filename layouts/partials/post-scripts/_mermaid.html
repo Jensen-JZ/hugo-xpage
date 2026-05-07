@@ -1,0 +1,63 @@
+{{/* Mermaid lazy-loader — only fires if the body has at least one
+     <pre class="mermaid"> block. Mermaid v10 ESM is loaded from jsDelivr.
+     Theme is auto-derived from current data-theme (dark/light).
+
+     IMPORTANT: posts are multilingual (.lang-block[data-lang=en|zh|tw]).
+     If we run mermaid against ALL blocks at once, identical sources across
+     language clones collide on internal IDs and the 2nd/3rd render errors.
+     We render only the ACTIVE lang-block, then re-render on language switch. */}}
+(function mermaidLoader(){
+  var blocks = document.querySelectorAll('.body pre.mermaid');
+  if (!blocks.length) return;
+
+  var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  var themeVars = {
+    primaryColor:        isDark ? '#1a1a1a' : '#fafaf7',
+    primaryTextColor:    isDark ? '#fafaf7' : '#0a0a0a',
+    primaryBorderColor:  isDark ? '#404040' : '#bdbdbd',
+    lineColor:           isDark ? '#bdbdbd' : '#404040',
+    secondaryColor:      '#FFE600',
+    tertiaryColor:       isDark ? '#0a0a0a' : '#ffffff',
+    fontFamily:          "'Inter', system-ui, sans-serif",
+    fontSize:            '14px'
+  };
+
+  /* Stash original source on each block so language switches can re-render. */
+  blocks.forEach(function(b){ if (!b.dataset.src) b.dataset.src = b.textContent; });
+
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.textContent = [
+    "import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs';",
+    "window.__mermaid = mermaid;",
+    "mermaid.initialize({",
+    "  startOnLoad: false,",
+    "  theme: 'base',",
+    "  themeVariables: " + JSON.stringify(themeVars) + ",",
+    "  securityLevel: 'loose',",
+    "  flowchart: { curve: 'basis', useMaxWidth: true }",
+    "});",
+    /* Render only the active lang-block. If no lang-block container, fall back to all. */
+    "var sel = document.querySelector('.lang-block[data-active=\"true\"]') ? '.lang-block[data-active=\"true\"] pre.mermaid' : '.body pre.mermaid';",
+    "mermaid.run({ querySelector: sel });"
+  ].join('\n');
+  document.head.appendChild(s);
+
+  /* Re-render when the active lang-block changes (lang switcher toggles data-active). */
+  var langRoot = document.querySelector('.body');
+  if (langRoot) {
+    var langObs = new MutationObserver(function(muts){
+      if (!window.__mermaid) return;
+      var changed = muts.some(function(m){ return m.attributeName === 'data-active'; });
+      if (!changed) return;
+      var fresh = document.querySelectorAll('.lang-block[data-active="true"] pre.mermaid');
+      fresh.forEach(function(p){
+        if (p.querySelector('svg')) return;            /* already rendered */
+        if (p.dataset.src) p.textContent = p.dataset.src;
+        p.removeAttribute('data-processed');
+      });
+      if (fresh.length) window.__mermaid.run({ querySelector: '.lang-block[data-active="true"] pre.mermaid' });
+    });
+    langObs.observe(langRoot, { subtree: true, attributes: true, attributeFilter: ['data-active'] });
+  }
+})();

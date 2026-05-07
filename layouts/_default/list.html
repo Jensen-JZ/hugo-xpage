@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Crect width='240' height='240' fill='%23FFE600'/%3E%3Cpolygon points='200,120 160,189.3 80,189.3 40,120 80,50.7 160,50.7' fill='%23000'/%3E%3Cpolygon points='120,80 158,107.6 143.5,152.3 96.5,152.3 82,107.6' fill='%23FFE600'/%3E%3C/svg%3E" />
+<title>{{ index site.Data.i18n.en "archive.title" }} — {{ site.Params.author }}</title>
+{{ partial "chrome/seo.html" . }}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ "assets/site-header.css" | relURL }}?v={{ now.Unix }}" />
+<style>
+{{ partial "post-styles/_article.html" . | safeCSS }}
+  /* Archive list — IDENTICAL to homepage .posts/.post block #06 vocabulary:
+     yellow swipe::before on hover, multi-column grid, hover-invert, accent
+     pill on category, arrow translateX. Single source of truth lives here
+     since site-header.css doesn't ship .post styles. */
+  .posts { border-top: 1px solid var(--fg); margin-top: 40px; }
+  .post {
+    display: grid;
+    grid-template-columns: 110px 110px 1fr auto;
+    gap: clamp(16px, 3vw, 48px);
+    padding: clamp(20px, 3vh, 32px) 0;
+    align-items: center;
+    border-bottom: 1px solid var(--hairline);
+    position: relative; overflow: hidden;
+    cursor: none;
+    /* Layout-stable hover — no padding-left transition (would reflow the
+       1fr title column and bump CN titles from 2 lines to 3). */
+  }
+  .post::before {
+    content: ""; position: absolute; inset: 0;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .45s var(--ease);
+    z-index: 0;
+  }
+  /* Children stack above the swipe — mirrors homepage .post and avoids
+     any z-index:-1 quirks where the swipe can fall behind the page bg. */
+  .post > * { position: relative; z-index: 1; }
+  .post:hover::before { transform: scaleX(1); }
+  .post:hover { border-bottom-color: var(--fg); }
+  [data-theme="dark"] .post:hover { color: var(--ink); }
+  .post__date {
+    font-family: var(--font-mono);
+    font-size: 12px; letter-spacing: .04em;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .post:hover .post__date { color: var(--ink); opacity: .7; }
+  .post__cat {
+    font-family: var(--font-mono);
+    font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--fg);
+    border: 1px solid var(--hairline);
+    padding: 4px 8px;
+    justify-self: start;
+    transition: border-color .25s var(--ease);
+  }
+  [data-theme="dark"] .post__cat { color: var(--paper); }
+  .post:hover .post__cat { border-color: var(--ink); color: var(--ink); }
+  .post__title {
+    font-size: clamp(18px, 1.7vw, 26px);
+    font-weight: 500; letter-spacing: -0.015em; line-height: 1.25;
+  }
+  .post__arrow {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    transition: transform .45s var(--ease);
+  }
+  .post:hover .post__arrow { transform: translateX(8px); }
+
+  /* Lang-blocks inside .post__title — only active variant visible. */
+  .post__title .lang-block { display: none; }
+  .post__title .lang-block[data-active="true"] { display: inline; }
+
+  .archive__count {
+    margin-top: 32px;
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .archive__count b { color: var(--fg); font-weight: 500; }
+  .archive__empty {
+    padding: 60px 0; text-align: center;
+    color: var(--muted); font-style: italic;
+  }
+
+  @media (max-width: 640px) {
+    .post {
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      gap: 6px 12px; padding: 18px 0;
+    }
+    .post__cat { display: none; }
+    .post__date { grid-column: 1 / -1; font-size: 10.5px; letter-spacing: .14em; color: var(--muted); }
+    .post__title { font-size: 16px; line-height: 1.3; }
+    .post__arrow { font-size: 14px; align-self: end; }
+  }
+</style>
+</head>
+<body>
+<div class="crosshair" id="crosshair" aria-hidden="true"><span class="crosshair__line h" id="chH"></span><span class="crosshair__line v" id="chV"></span></div>
+<div class="crosshair-dot" id="chDot" aria-hidden="true"></div>
+
+{{ partial "sections/nav.html" . }}
+
+<article>
+  <span class="kicker" data-i18n="archive.kicker">{{ index site.Data.i18n.en "archive.kicker" }}</span>
+  <h1 class="title" data-i18n="archive.title">{{ index site.Data.i18n.en "archive.title" }}</h1>
+  <p class="deck" data-i18n="archive.deck">{{ index site.Data.i18n.en "archive.deck" }}</p>
+
+  {{- $posts := where .Site.RegularPages "Section" "posts" -}}
+  {{- $sorted := sort $posts "Params.weight" -}}
+  {{- $count := len $sorted -}}
+
+  {{ if $count }}
+  <div class="posts">
+    {{ range $sorted }}
+    <a class="post" href="{{ "posts/" | relURL }}{{ .File.BaseFileName }}.html" data-post-id="{{ .Params.postId }}">
+      <span class="post__date">{{ .Params.dateDisplay }}</span>
+      <span class="post__cat" data-i18n="{{ .Params.categoryI18n }}">{{ index site.Data.i18n.en .Params.categoryI18n }}</span>
+      <span class="post__title">
+        <span class="lang-block" data-lang="en" data-active="true">{{ .Params.titles.en }}</span>
+        <span class="lang-block" data-lang="zh">{{ .Params.titles.zh }}</span>
+        <span class="lang-block" data-lang="tw">{{ .Params.titles.tw }}</span>
+      </span>
+      <span class="post__arrow">→</span>
+    </a>
+    {{ end }}
+  </div>
+  <p class="archive__count"><b>{{ $count }}</b> <span data-i18n="archive.count">{{ index site.Data.i18n.en "archive.count" }}</span></p>
+  {{ else }}
+  <p class="archive__empty" data-i18n="archive.empty">{{ index site.Data.i18n.en "archive.empty" }}</p>
+  {{ end }}
+</article>
+
+{{ partial "chrome/progress.html" . }}
+{{ partial "chrome/back-top.html" . }}
+
+<footer class="foot"><span>{{ site.Params.copyright }}</span><span data-i18n="post.foot">{{ index site.Data.i18n.en "post.foot" }}</span></footer>
+
+<script>
+{{- /* Reuse single.html's full-dict-per-language pattern so theme/lang
+       toggles work identically. No post-specific overrides needed here. */ -}}
+const I18N = {{ site.Data.i18n | jsonify | safeJS }};
+{{ partial "post-scripts/_base.html" . | safeJS }}
+</script>
+</body>
+</html>

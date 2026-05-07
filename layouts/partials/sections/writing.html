@@ -1,0 +1,26 @@
+{{/* Writing section (block #06). Already Hugo-driven; ranges over content/posts/. */}}
+{{- $en := site.Data.i18n.en -}}
+<section class="block" id="writing">
+  <div class="section-head reveal">
+    <div class="meta"><span class="num">06</span><span data-i18n="nav.writing">{{ index $en "nav.writing" }}</span><span class="hairline" style="flex:1; height:1px; background: var(--hairline);"></span></div>
+    <h2 data-i18n="writing.h2">{{ index $en "writing.h2" }}</h2>
+    <p class="lede" data-i18n="writing.lede" data-i18n-html>{{ index $en "writing.lede" | safeHTML }}</p>
+  </div>
+
+  <div class="posts reveal delay-1" id="postsList">
+    {{ range first 6 (sort (where .Site.RegularPages "Section" "posts") "Params.weight") }}
+    <a class="post" href="posts/{{ .File.BaseFileName }}.html" data-post-id="{{ .Params.postId }}">
+      <span class="post__date">{{ .Params.dateDisplay }}</span>
+      <span class="post__cat" data-i18n="{{ .Params.categoryI18n }}">{{ index site.Data.i18n.en .Params.categoryI18n }}</span>
+      <span class="post__title">
+        <span class="lang-block" data-lang="en" data-active="true">{{ .Params.titles.en }}</span>
+        <span class="lang-block" data-lang="zh">{{ .Params.titles.zh }}</span>
+        <span class="lang-block" data-lang="tw">{{ .Params.titles.tw }}</span>
+      </span>
+      <span class="post__arrow">→</span>
+    </a>
+    {{ end }}
+  </div>
+
+  <a class="posts__more" href="{{ "posts.html" | relURL }}"><span data-i18n="writing.allPosts">{{ index $en "writing.allPosts" }}</span><span>→</span></a>
+</section>

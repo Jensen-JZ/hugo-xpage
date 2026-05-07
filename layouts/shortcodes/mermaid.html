@@ -1,0 +1,28 @@
+{{- /*
+  Mermaid diagram shortcode.
+
+  Usage (block form, preferred):
+    {{< mermaid >}}
+    graph TD
+      A[Start] --> B{Decision}
+      B -- Yes --> C[Action]
+      B -- No --> D[Skip]
+    {{< /mermaid >}}
+
+  Or inline-args form:
+    {{< mermaid theme="default" align="center" >}}
+    sequenceDiagram
+      Alice->>Bob: Hello
+    {{< /mermaid >}}
+
+  Renders as <pre class="mermaid">…</pre>. The on-demand loader in
+  post-scripts/_mermaid.html lazy-loads mermaid.min.js when any such block is
+  detected, then calls mermaid.run() to swap the <pre> with the rendered SVG.
+  Each block also supports click-to-lightbox (the SVG is treated as an image).
+*/ -}}
+{{- $align := default "center" (.Get "align") -}}
+{{- $theme := default "" (.Get "theme") -}}
+<figure class="md md--{{ $align }}"{{ with $theme }} data-mermaid-theme="{{ . }}"{{ end }}>
+  <pre class="mermaid">{{ trim .Inner "\n " | safeHTML }}</pre>
+  {{- with .Get "caption" }}<figcaption class="md__cap">{{ . | safeHTML }}</figcaption>{{- end }}
+</figure>

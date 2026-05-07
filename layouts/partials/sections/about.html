@@ -1,0 +1,31 @@
+{{/* About section (block #01). Prose paragraphs from i18n + at-a-glance kv rows from data/about.toml. */}}
+{{- $en := site.Data.i18n.en -}}
+<section class="block" id="about">
+  <div class="section-head reveal">
+    <div class="meta"><span class="num">01</span><span data-i18n="nav.about">{{ index $en "nav.about" }}</span><span class="hairline" style="flex:1; height:1px; background: var(--hairline);"></span></div>
+    <h2 data-i18n="about.h2">{{ index $en "about.h2" }}</h2>
+    <p class="lede" data-i18n="about.lede">{{ index $en "about.lede" }}</p>
+  </div>
+
+  <div class="about">
+    <div class="about__prose reveal delay-1">
+      <p data-i18n="about.p1" data-i18n-html>{{ index $en "about.p1" | safeHTML }}</p>
+      <p data-i18n="about.p2">{{ index $en "about.p2" }}</p>
+      <p data-i18n="about.p3" data-i18n-html>{{ index $en "about.p3" | safeHTML }}</p>
+    </div>
+
+    <div class="kv reveal delay-2" aria-label="At a glance">
+      {{- range site.Data.about.rows }}
+      <div class="kv__row">
+        <span class="kv__k" data-i18n="{{ .labelKey }}">{{ index $en .labelKey }}</span>
+        {{- if .valueKey }}
+        <span class="kv__v{{ with .valueClass }} {{ . }}{{ end }}" data-i18n="{{ .valueKey }}"{{ if .valueHTML }} data-i18n-html{{ end }}>{{ if .valueHTML }}{{ index $en .valueKey | safeHTML }}{{ else }}{{ index $en .valueKey }}{{ end }}</span>
+        {{- else }}
+        <span class="kv__v{{ with .valueClass }} {{ . }}{{ end }}">{{ .rawValue }}</span>
+        {{- end }}
+        <span class="kv__t"{{ with .timeId }} id="{{ . }}"{{ end }}>{{ .time }}</span>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</section>

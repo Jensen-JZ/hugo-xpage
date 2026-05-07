@@ -1,0 +1,37 @@
+{{/* Top navigation bar. Brand + section links + status/search/lang/theme controls.
+     On non-home pages (post/section list), section anchors prefix with the
+     home URL so the link navigates back to homepage and scrolls. */}}
+{{- $en := site.Data.i18n.en -}}
+{{- $base := "" -}}
+{{- if not .IsHome -}}{{ $base = "/" | relURL }}{{- end -}}
+{{- $brandHref := cond .IsHome "#" $base -}}
+<nav class="nav">
+  <div class="shell nav__row">
+    <a href="{{ $brandHref }}" class="nav__brand">{{ site.Params.navBrandPrimary }} <span>/ {{ site.Params.handle }}</span></a>
+    <div class="nav__links">
+      <a href="{{ $base }}#about"><span>01</span><b data-i18n="nav.about">{{ index $en "nav.about" }}</b></a>
+      <a href="{{ $base }}#writing"><span>02</span><b data-i18n="nav.writing">{{ index $en "nav.writing" }}</b></a>
+      <a href="{{ $base }}#photography"><span>03</span><b data-i18n="nav.photography">{{ index $en "nav.photography" }}</b></a>
+      <a href="{{ $base }}#contact"><span>04</span><b data-i18n="nav.contact">{{ index $en "nav.contact" }}</b></a>
+    </div>
+    <div class="nav__right">
+      <span class="status">
+        <span class="dot"></span><span data-i18n="nav.status">{{ index $en "nav.status" }}</span> · UTC<b id="utc-offset">+1</b>
+      </span>
+      <button class="search-btn" id="searchBtn" aria-label="Open search"{{ if not .IsHome }} data-search-redirect="true"{{ end }}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span data-i18n="nav.search">{{ index $en "nav.search" }}</span>
+        <kbd>⌘K</kbd>
+      </button>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button data-lang="en" lang="en" aria-pressed="true">EN</button>
+        <button data-lang="zh" lang="zh" aria-pressed="false">简</button>
+        <button data-lang="tw" lang="zh-Hant" aria-pressed="false">繁</button>
+      </div>
+      <button class="theme-toggle" id="themeBtn" aria-label="Toggle dark mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <span id="themeLabel" data-i18n="nav.themeDark">{{ index $en "nav.themeDark" }}</span>
+      </button>
+    </div>
+  </div>
+</nav>

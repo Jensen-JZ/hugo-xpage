@@ -1,0 +1,15 @@
+{{/* Persistent left rail. Pure chrome — no i18n, no data. */}}
+<aside class="rail" aria-hidden="true">
+  <a class="rail__mark" href="#" aria-label="{{ site.Params.author }} — home">
+    <svg viewBox="0 0 240 240" aria-hidden="true">
+      <rect class="xf-field" width="240" height="240"/>
+      <g class="xf-hex">
+        <polygon points="200,120 160,189.3 80,189.3 40,120 80,50.7 160,50.7" fill="var(--ink)"/>
+      </g>
+      <g class="xf-pent">
+        <polygon points="120,80 158,107.6 143.5,152.3 96.5,152.3 82,107.6" fill="var(--accent)"/>
+      </g>
+    </svg>
+  </a>
+  <div class="rail__vert">{{ site.Params.railVertical }}</div>
+</aside>

@@ -1,0 +1,30 @@
+{{/* Work & projects section (block #05). Cards from data/projects.toml. */}}
+{{- $en := site.Data.i18n.en -}}
+<section class="block" id="projects">
+  <div class="section-head reveal">
+    <div class="meta"><span class="num">05</span><span data-i18n="projects.label">{{ index $en "projects.label" }}</span><span class="hairline" style="flex:1; height:1px; background: var(--hairline);"></span></div>
+    <h2 data-i18n="projects.h2">{{ index $en "projects.h2" }}</h2>
+    <p class="lede" data-i18n="projects.lede">{{ index $en "projects.lede" }}</p>
+  </div>
+  <div class="projects reveal delay-1">
+    {{- range site.Data.projects.items }}
+    <article class="project-card">
+      <div class="project-card__head">
+        <h3 class="project-card__name">{{ .name }}</h3>
+        <div class="project-card__year">{{ .year }}</div>
+      </div>
+      <div class="project-card__tagline" data-i18n="{{ .tagKey }}">{{ index $en .tagKey }}</div>
+      <p class="project-card__body" data-i18n="{{ .bodyKey }}">{{ index $en .bodyKey }}</p>
+      <div class="project-card__meta">
+        <span><b>Role</b> · <span data-i18n="{{ .roleKey }}">{{ index $en .roleKey }}</span></span>
+        <span><b>{{ .metaLabel }}</b> · {{ .metaValue }}</span>
+      </div>
+    </article>
+    {{- end }}
+  </div>
+  <div class="projects-dots" id="projectsDots" aria-hidden="true">
+    {{- range $i, $_ := site.Data.projects.items }}
+    <span{{ if eq $i 0 }} class="is-active"{{ end }}></span>
+    {{- end }}
+  </div>
+</section>

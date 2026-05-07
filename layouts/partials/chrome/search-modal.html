@@ -1,0 +1,18 @@
+{{/* Cmd-K search modal — placeholder is populated client-side from I18N at runtime. */}}
+{{- $en := site.Data.i18n.en -}}
+<div class="search-modal" id="searchModal" aria-hidden="true">
+  <div class="search-shell">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="searchInput" class="search-input" type="text" autocomplete="off" spellcheck="false"
+             placeholder="{{ index $en "search.placeholder" }}" data-i18n-placeholder="search.placeholder" />
+      <span class="search-close" data-i18n="search.esc">{{ index $en "search.esc" }}</span>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-hint">
+      <span><kbd>↑</kbd><kbd>↓</kbd><span data-i18n="search.hint.nav">{{ index $en "search.hint.nav" }}</span></span>
+      <span><kbd>↵</kbd><span data-i18n="search.hint.open">{{ index $en "search.hint.open" }}</span></span>
+      <span><kbd>esc</kbd><span data-i18n="search.hint.close">{{ index $en "search.hint.close" }}</span></span>
+    </div>
+  </div>
+</div>

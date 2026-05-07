@@ -1,0 +1,17 @@
+{{/* Journey section (block #04). Year-anchored waypoints from data/journey.toml. */}}
+{{- $en := site.Data.i18n.en -}}
+<section class="block" id="journey">
+  <div class="section-head reveal">
+    <div class="meta"><span class="num">04</span><span data-i18n="journey.label">{{ index $en "journey.label" }}</span><span class="hairline" style="flex:1; height:1px; background: var(--hairline);"></span></div>
+    <h2 data-i18n="journey.h2">{{ index $en "journey.h2" }}</h2>
+  </div>
+  <div class="journey reveal delay-1">
+    {{- range site.Data.journey.nodes }}
+    <div class="journey__node">
+      <div class="journey__year">{{ .year }}</div>
+      <h3 class="journey__title" data-i18n="{{ .titleKey }}">{{ index $en .titleKey }}</h3>
+      <p class="journey__desc" data-i18n="{{ .descKey }}">{{ index $en .descKey }}</p>
+    </div>
+    {{- end }}
+  </div>
+</section>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Crect width='240' height='240' fill='%23FFE600'/%3E%3Cpolygon points='200,120 160,189.3 80,189.3 40,120 80,50.7 160,50.7' fill='%23000'/%3E%3Cpolygon points='120,80 158,107.6 143.5,152.3 96.5,152.3 82,107.6' fill='%23FFE600'/%3E%3C/svg%3E" />
+<title>{{ .Title }} — {{ site.Params.author }}</title>
+{{ partial "chrome/seo.html" . }}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ "assets/site-header.css" | relURL }}?v={{ now.Unix }}" />
+<style>
+{{ partial "post-styles/_article.html" . | safeCSS }}
+{{ partial "post-styles/_shortcodes.html" . | safeCSS }}
+</style>
+{{- /* KaTeX is loaded on-demand — only when a $...$ or $$...$$ pair is
+       detected in the rendered body. Avoids 250kb network cost on prose
+       posts that have no math. */ -}}
+</head>
+<body>
+<div class="crosshair" id="crosshair" aria-hidden="true"><span class="crosshair__line h" id="chH"></span><span class="crosshair__line v" id="chV"></span></div>
+<div class="crosshair-dot" id="chDot" aria-hidden="true"></div>
+
+{{ partial "sections/nav.html" . }}
+
+<article>
+  <span class="kicker" data-i18n="cat">{{ .Params.kickers.en }}</span>
+  <h1 class="title">
+    <span class="lang-block" data-lang="en" data-active="true">{{ .Params.titles.en }}</span>
+    <span class="lang-block" data-lang="zh">{{ .Params.titles.zh }}</span>
+    <span class="lang-block" data-lang="tw">{{ .Params.titles.tw }}</span>
+  </h1>
+  <p class="deck">
+    <span class="lang-block" data-lang="en" data-active="true">{{ .Params.decks.en }}</span>
+    <span class="lang-block" data-lang="zh">{{ .Params.decks.zh }}</span>
+    <span class="lang-block" data-lang="tw">{{ .Params.decks.tw }}</span>
+  </p>
+  <div class="byline">
+    <span><b>{{ site.Params.author }}</b></span><span class="sep"></span>
+    <span class="mono">{{ .Params.bylineDate }}</span><span class="sep"></span>
+    <span data-i18n="readtime">{{ .Params.readTimes.en }}</span>
+  </div>
+  <div class="body">
+{{ .Content }}
+  </div>
+
+  <nav class="post-nav">
+    {{ with .Params.prev }}<a class="prev" href="{{ .href }}"><span data-i18n="post.prev">{{ index site.Data.i18n.en "post.prev" }}</span><b>{{ .title }}</b></a>{{ end }}
+    {{ with .Params.next }}<a class="next" href="{{ .href }}"><span data-i18n="post.next">{{ index site.Data.i18n.en "post.next" }}</span><b>{{ .title }}</b></a>{{ end }}
+  </nav>
+</article>
+
+{{ partial "chrome/progress.html" . }}
+{{ partial "chrome/back-top.html" . }}
+{{ partial "chrome/lightbox.html" . }}
+
+<footer class="foot"><span>{{ site.Params.copyright }}</span><span data-i18n="post.foot">{{ index site.Data.i18n.en "post.foot" }}</span></footer>
+
+<script>
+  {{- /* Per-post I18N: full site dict per language, plus post-specific overrides
+     for kickers (cat) / readTimes (readtime) / next-link override. */ -}}
+  {{- $page := . -}}
+  {{- $i18n := dict -}}
+  {{- range $lang, $dict := site.Data.i18n -}}
+    {{- $next := index $dict "post.next" -}}
+    {{- with $page.Params.nextOverrides -}}{{- with index . $lang -}}{{- $next = . -}}{{- end -}}{{- end -}}
+    {{- $entry := merge $dict (dict
+      "cat"      (index $page.Params.kickers $lang)
+      "readtime" (index $page.Params.readTimes $lang)
+      "post.next" $next
+    ) -}}
+    {{- $i18n = merge $i18n (dict $lang $entry) -}}
+  {{- end -}}
+const I18N = {{ $i18n | jsonify | safeJS }};
+{{ partial "post-scripts/_base.html" . | safeJS }}
+{{ partial "post-scripts/_shortcodes.html" . | safeJS }}
+{{ partial "post-scripts/_codeblock.html" . | safeJS }}
+{{ partial "post-scripts/_mermaid.html" . | safeJS }}
+
+/* On-demand KaTeX: scan body text for $...$ / $$...$$ / \(...\) / \[...\].
+   Skip cost entirely on plain prose posts. */
+(function () {
+  var body = document.querySelector('.body');
+  if (!body) return;
+  var text = body.textContent || '';
+  /* Conservative detector: needs at least one $$ pair OR two $ on same line OR \(/\[. */
+  var hasMath = /\$\$[\s\S]+?\$\$/.test(text)
+             || /\\\([\s\S]+?\\\)/.test(text)
+             || /\\\[[\s\S]+?\\\]/.test(text);
+  if (!hasMath) return;
+  var css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css';
+  document.head.appendChild(css);
+  /* Chain loads: auto-render.js dereferences global `katex` at module init,
+     so katex.min.js MUST finish first. Dynamic <script> ignores `defer`,
+     so we sequence via onload. */
+  var s1 = document.createElement('script');
+  s1.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js';
+  s1.onload = function () {
+    var s2 = document.createElement('script');
+    s2.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js';
+    s2.onload = function () {
+      if (typeof renderMathInElement !== 'function') return;
+      renderMathInElement(body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false
+      });
+    };
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s1);
+})();
+</script>
+</body>
+</html>

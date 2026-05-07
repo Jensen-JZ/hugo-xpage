@@ -1,0 +1,38 @@
+# "What I do" section (block #03) — three intersecting practices.
+# Each col: labelKey + titleKey + raw items list.
+# The third col additionally has a "note" with a brand label and i18n caption.
+
+[[cols]]
+labelKey = "whatdo.fe.label"
+titleKey = "whatdo.fe.title"
+items = [
+  "Skill A",
+  "Skill B",
+  "Skill C",
+  "Skill D",
+  "Skill E",
+]
+
+[[cols]]
+labelKey = "whatdo.be.label"
+titleKey = "whatdo.be.title"
+items = [
+  "Skill A",
+  "Skill B",
+  "Skill C",
+  "Skill D",
+  "Skill E",
+]
+
+[[cols]]
+labelKey = "whatdo.ai.label"
+titleKey = "whatdo.ai.title"
+items = [
+  "Skill A",
+  "Skill B",
+  "Skill C",
+  "Skill D",
+  "Skill E",
+]
+noteBrand = "FLAGSHIP"
+noteKey = "whatdo.ai.note"

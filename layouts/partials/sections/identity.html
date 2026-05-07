@@ -1,0 +1,23 @@
+{{/* Identity / profile section (block #02). Renders dt/dd pairs from data/identity.toml. */}}
+{{- $en := site.Data.i18n.en -}}
+{{- $idy := site.Data.identity -}}
+<section class="block" id="identity">
+  <div class="section-head reveal">
+    <div class="meta"><span class="num">02</span><span data-i18n="identity.label">{{ index $en "identity.label" }}</span><span class="hairline" style="flex:1; height:1px; background: var(--hairline);"></span></div>
+  </div>
+  <div class="identity reveal delay-1">
+    <h2 class="identity__name" data-i18n="{{ $idy.nameKey }}">{{ index $en $idy.nameKey }}</h2>
+    <dl class="identity__meta">
+      {{- range $idy.fields }}
+      <div>
+        <dt data-i18n="{{ .labelKey }}">{{ index $en .labelKey }}</dt>
+        {{- if .valueKey }}
+        <dd data-i18n="{{ .valueKey }}">{{ index $en .valueKey }}</dd>
+        {{- else }}
+        <dd>{{ .value }}</dd>
+        {{- end }}
+      </div>
+      {{- end }}
+    </dl>
+  </div>
+</section>

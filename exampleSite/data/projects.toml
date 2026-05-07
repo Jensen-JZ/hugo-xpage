@@ -1,0 +1,39 @@
+# Work & projects section (block #05).
+# Each item: name (untranslated brand), year, tag/body/role keys, and a meta pair.
+# metaLabel/metaValue is the second meta entry (Stack or Where).
+
+[[items]]
+name = "Project Alpha"
+year = "2024"
+tagKey = "projects.alpha.tag"
+bodyKey = "projects.alpha.body"
+roleKey = "projects.alpha.role"
+metaLabel = "Stack"
+metaValue = "Tech · Tech"
+
+[[items]]
+name = "Project Bravo"
+year = "2025"
+tagKey = "projects.bravo.tag"
+bodyKey = "projects.bravo.body"
+roleKey = "projects.bravo.role"
+metaLabel = "Where"
+metaValue = "Org Name"
+
+[[items]]
+name = "Project Charlie"
+year = "2024"
+tagKey = "projects.charlie.tag"
+bodyKey = "projects.charlie.body"
+roleKey = "projects.charlie.role"
+metaLabel = "Where"
+metaValue = "Org Name"
+
+[[items]]
+name = "Project Delta"
+year = "2025"
+tagKey = "projects.delta.tag"
+bodyKey = "projects.delta.body"
+roleKey = "projects.delta.role"
+metaLabel = "Where"
+metaValue = "Org Name"

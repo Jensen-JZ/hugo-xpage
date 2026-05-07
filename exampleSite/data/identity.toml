@@ -1,0 +1,20 @@
+# Identity / profile section (block #02).
+# Name comes from i18n (identity.name); fields are dt/dd pairs.
+
+nameKey = "identity.name"
+
+[[fields]]
+labelKey = "identity.born"
+value = "1900"
+
+[[fields]]
+labelKey = "identity.from"
+valueKey = "identity.from.v"
+
+[[fields]]
+labelKey = "identity.tz"
+value = "UTC+00:00"
+
+[[fields]]
+labelKey = "identity.ver"
+value = "1.0"

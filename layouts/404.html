@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Crect width='240' height='240' fill='%23FFE600'/%3E%3Cpolygon points='200,120 160,189.3 80,189.3 40,120 80,50.7 160,50.7' fill='%23000'/%3E%3Cpolygon points='120,80 158,107.6 143.5,152.3 96.5,152.3 82,107.6' fill='%23FFE600'/%3E%3C/svg%3E" />
+  <title>404 — {{ site.Title }}</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Page not found." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Shared chrome: rail, top nav, lang/theme/search controls, crosshair -->
+  <link rel="stylesheet" href="assets/site-header.css" />
+
+  <style>
+    /* TOKENS — identical to index.html so chrome aligns 1:1 */
+    :root {
+      --ink:        #000000;
+      --paper:      #ffffff;
+      --accent:     #FFE600;
+      --accent-2:   #FFC700;
+
+      --bg:         var(--paper);
+      --fg:         var(--ink);
+      --muted:      rgba(0, 0, 0, .54);
+      --faint:      rgba(0, 0, 0, .12);
+      --hairline:   rgba(0, 0, 0, .14);
+      --selection:  var(--accent);
+
+      --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+      --font-mono:  'JetBrains Mono', ui-monospace, 'IBM Plex Mono', Menlo, monospace;
+
+      --shell-pad:  clamp(20px, 4vw, 56px);
+      --rail:       64px;
+
+      --ease:       cubic-bezier(.2, .7, .2, 1);
+    }
+    [data-theme="dark"] {
+      --bg:         var(--ink);
+      --fg:         var(--paper);
+      --muted:      rgba(255, 255, 255, .58);
+      --faint:      rgba(255, 255, 255, .12);
+      --hairline:   rgba(255, 255, 255, .18);
+    }
+
+    /* RESET & BASE */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-feature-settings: "ss01", "ss02", "cv11", "tnum";
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      line-height: 1.45;
+      overflow-x: hidden;
+      transition: background .35s var(--ease), color .35s var(--ease);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    ::selection { background: var(--selection); color: var(--ink); }
+    a { color: inherit; text-decoration: none; }
+    img, svg, canvas { max-width: 100%; display: block; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: none; padding: 0; }
+
+    /* SHELL/RAIL/NAV/STATUS/THEME/LANG/SEARCH moved to assets/site-header.css */
+
+    /* MAIN — flex grow so footer sits at bottom on short pages */
+    main { flex: 1; }
+
+    /* 404 LAYOUT */
+    .nf {
+      padding: clamp(40px, 8vh, 100px) 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: clamp(40px, 6vw, 100px);
+      align-items: center;
+    }
+    @media (max-width: 900px) { .nf { grid-template-columns: 1fr; gap: 40px; } }
+
+    .num {
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: clamp(140px, 28vw, 420px);
+      line-height: .85;
+      letter-spacing: -0.07em;
+      margin: 0;
+      animation: glitch 4.8s var(--ease) infinite;
+    }
+    .num span:nth-child(1) { color: var(--fg); }
+    .num span:nth-child(2) {
+      color: var(--ink);
+      background: var(--accent);
+      display: inline-block;
+      padding: 0 .04em;
+      transform: translateY(.04em);
+    }
+    .num span:nth-child(3) { color: var(--fg); }
+    @keyframes glitch {
+      0%, 90%, 100% { transform: none; }
+      92% { transform: translate(-2px, 1px) skewX(-2deg); }
+      94% { transform: translate(3px, -1px) skewX(1.5deg); }
+      96% { transform: translate(-1px, 2px); }
+    }
+
+    .nf__copy .kicker {
+      display: inline-block; padding: 4px 8px;
+      background: var(--ink); color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    [data-theme="dark"] .nf__copy .kicker { background: var(--accent); color: var(--ink); }
+
+    .nf__copy h1 {
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.05; letter-spacing: -0.025em;
+      margin: 0 0 18px;
+    }
+    .nf__copy p {
+      font-size: clamp(15px, 1.3vw, 17px);
+      color: var(--muted);
+      line-height: 1.6; max-width: 48ch;
+      margin: 0 0 28px;
+    }
+    /* .lang-block: shared CSS in site-header.css. h1 needs an extra
+       inline override here since site-header.css covers p / .post__title. */
+    h1 .lang-block[data-active="true"] { display: inline; }
+
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .actions a {
+      padding: 10px 18px;
+      font-family: var(--font-mono);
+      font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+      border: 1px solid var(--fg);
+      transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+    }
+    .actions a:hover { background: var(--accent); color: var(--ink); border-color: var(--ink); }
+    .actions a.subtle { border-color: var(--hairline); color: var(--muted); }
+    .actions a.subtle:hover { color: var(--fg); border-color: var(--fg); background: transparent; }
+
+    .lost-list {
+      margin-top: 36px;
+      border-top: 1px solid var(--hairline);
+      padding-top: 18px;
+      font-family: var(--font-mono);
+      font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .lost-list b { color: var(--fg); display: block; margin-bottom: 10px; font-weight: 500; }
+    .lost-list a {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 14px; padding: 8px 0;
+      color: var(--muted);
+      transition: color .2s, background .2s;
+      border-top: 1px solid var(--faint);
+    }
+    .lost-list a:first-of-type { border-top: 0; }
+    .lost-list a:hover { color: var(--fg); }
+    .lost-list a span { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+    /* FOOTER — identical 3-col layout to index */
+    footer {
+      padding: 40px 0 56px;
+      border-top: 1px solid var(--hairline);
+      font-family: var(--font-mono);
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    footer .right { text-align: right; }
+    footer .center { text-align: center; }
+    footer b { color: var(--fg); font-weight: 500; }
+    @media (max-width: 640px) {
+      :root { --rail: 44px; }
+      footer { grid-template-columns: 1fr; text-align: left; }
+      footer .right, footer .center { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Persistent left rail (matches index) -->
+  <aside class="rail" aria-hidden="true">
+    <a class="rail__mark" href="index.html" aria-label="{{ site.Title }} — home">
+      <svg viewBox="0 0 240 240" aria-hidden="true">
+        <rect class="xf-field" width="240" height="240"/>
+        <g class="xf-hex">
+          <polygon points="200,120 160,189.3 80,189.3 40,120 80,50.7 160,50.7" fill="var(--ink)"/>
+        </g>
+        <g class="xf-pent">
+          <polygon points="120,80 158,107.6 143.5,152.3 96.5,152.3 82,107.6" fill="var(--accent)"/>
+        </g>
+      </svg>
+    </a>
+    <div class="rail__vert">JINGYAO · ZHANG · 2026</div>
+  </aside>
+
+  <!-- Top nav (matches index) -->
+  <nav class="nav">
+    <div class="shell nav__row">
+      <a href="index.html" class="nav__brand">JENSEN <span>/ @bitbeats</span></a>
+      <div class="nav__links">
+        <a href="index.html#about"><span>01</span><b data-i18n="nav.about">About</b></a>
+        <a href="index.html#writing"><span>02</span><b data-i18n="nav.writing">Writing</b></a>
+        <a href="index.html#photography"><span>03</span><b data-i18n="nav.photography">Photography</b></a>
+        <a href="index.html#contact"><span>04</span><b data-i18n="nav.contact">Contact</b></a>
+      </div>
+      <div class="nav__right">
+        <span class="status">
+          <span class="dot"></span><span data-i18n="nav.status">Available</span> · UTC<b id="utc-offset">+0</b>
+        </span>
+        <a class="search-btn" href="index.html" aria-label="Open search on home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span data-i18n="nav.search">Search</span>
+          <kbd>⌘K</kbd>
+        </a>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button data-lang="en" lang="en" aria-pressed="true">EN</button>
+          <button data-lang="zh" lang="zh" aria-pressed="false">简</button>
+          <button data-lang="tw" lang="zh-Hant" aria-pressed="false">繁</button>
+        </div>
+        <button class="theme-toggle" id="themeBtn" aria-label="Toggle dark mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <span id="themeLabel" data-i18n="nav.themeDark">Dark</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+  <div class="shell">
+
+    <section class="nf">
+      <div class="nf__num">
+        <h2 class="num"><span>4</span><span>0</span><span>4</span></h2>
+      </div>
+
+      <div class="nf__copy">
+        <span class="kicker" data-i18n="nf.kicker">SIGNAL · LOST</span>
+        <h1>
+          <span class="lang-block" data-lang="en" data-active="true">This page took a wrong turn somewhere.</span>
+          <span class="lang-block" data-lang="zh">这一页好像走丢了。</span>
+          <span class="lang-block" data-lang="tw">這一頁好像走丟了。</span>
+        </h1>
+        <p>
+          <span class="lang-block" data-lang="en" data-active="true">Either the URL has a typo, or I deleted the page in a fit of homepage tidying. Either way, here are some places that still exist.</span>
+          <span class="lang-block" data-lang="zh">要么是 URL 拼错了，要么是我在某次"主页大扫除"里把它删了。不管哪种，下面这些地方还在。</span>
+          <span class="lang-block" data-lang="tw">要麼是 URL 拼錯了，要麼是我在某次「首頁大掃除」裡把它刪了。不管哪種，下面這些地方還在。</span>
+        </p>
+        <div class="actions">
+          <a href="index.html" data-i18n="nf.actHome">← Home</a>
+          <a href="index.html#writing" class="subtle" data-i18n="nf.actWriting">All writing</a>
+          <a href="index.html#contact" class="subtle" data-i18n="nf.actContact">Contact</a>
+        </div>
+        <div class="lost-list">
+          <b data-i18n="nf.recentLabel">Recent posts</b>
+          {{ range first 7 (where site.RegularPages "Section" "posts").ByDate.Reverse }}
+          <a href="{{ .RelPermalink }}"><span>{{ .Date.Format "2006·01" }}</span><span class="lost-list__title">{{ .Title }}</span></a>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>{{ site.Params.copyright | default (printf "© 2026 · %s" site.Title) }}</span>
+      <span class="center" data-i18n="footer.center">Designed &amp; built in code · No template</span>
+      <span class="right"><span data-i18n="footer.deploy">Last deploy</span> <b id="footDate">—</b></span>
+    </footer>
+
+  </div><!-- /.shell -->
+  </main>
+
+  <!-- Crosshair cursor (matches index) -->
+  <div class="crosshair" id="crosshair" aria-hidden="true">
+    <span class="crosshair__line h" id="chH"></span>
+    <span class="crosshair__line v" id="chV"></span>
+  </div>
+  <div class="crosshair-dot" id="chDot" aria-hidden="true"></div>
+
+  <script>
+  /* safeStorage — falls back to in-memory on sandboxed iframes */
+  const safeStorage = (() => {
+    try {
+      window.localStorage.setItem('__od_probe','1');
+      window.localStorage.removeItem('__od_probe');
+      return window.localStorage;
+    } catch (e) {
+      const m = {};
+      return { getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); } };
+    }
+  })();
+
+  /* I18N — covers shared chrome (nav.*, footer.*) + 404-specific (nf.*) */
+  const I18N = {
+    en: {
+      'nav.about':'About','nav.writing':'Writing','nav.photography':'Photography','nav.contact':'Contact',
+      'nav.status':'Available','nav.search':'Search','nav.themeDark':'Dark','nav.themeLight':'Light',
+      'footer.center':'Designed & built in code · No template','footer.deploy':'Last deploy',
+      'nf.kicker':'SIGNAL · LOST',
+      'nf.actHome':'← Home','nf.actWriting':'All writing','nf.actContact':'Contact',
+      'nf.recentLabel':'Recent posts'
+    },
+    zh: {
+      'nav.about':'关于','nav.writing':'文字','nav.photography':'影像','nav.contact':'联系',
+      'nav.status':'在线','nav.search':'搜索','nav.themeDark':'深色','nav.themeLight':'浅色',
+      'footer.center':'设计与代码均自写 · 无模板','footer.deploy':'最近部署',
+      'nf.kicker':'信号 · 丢失',
+      'nf.actHome':'← 回首页','nf.actWriting':'全部文章','nf.actContact':'联系我',
+      'nf.recentLabel':'最近的文章'
+    },
+    tw: {
+      'nav.about':'關於','nav.writing':'文字','nav.photography':'影像','nav.contact':'聯絡',
+      'nav.status':'在線','nav.search':'搜尋','nav.themeDark':'深色','nav.themeLight':'淺色',
+      'footer.center':'設計與程式碼皆自寫 · 無範本','footer.deploy':'最近部署',
+      'nf.kicker':'訊號 · 遺失',
+      'nf.actHome':'← 回首頁','nf.actWriting':'全部文章','nf.actContact':'聯絡我',
+      'nf.recentLabel':'最近的文章'
+    }
+  };
+
+  const root = document.documentElement;
+
+  function applyLang(lang){
+    document.querySelectorAll('.lang-block').forEach(b => {
+      b.dataset.active = String(b.dataset.lang === lang);
+    });
+    document.querySelectorAll('.lang-switch button').forEach(b => {
+      b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false');
+    });
+    const dict = I18N[lang] || I18N.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.getAttribute('data-i18n');
+      if (dict[k]) el.textContent = dict[k];
+    });
+    refreshTheme();
+    root.setAttribute('lang', lang === 'en' ? 'en' : (lang === 'tw' ? 'zh-TW' : 'zh-CN'));
+    safeStorage.setItem('od-lang', lang);
+  }
+
+  function refreshTheme(){
+    const lang = safeStorage.getItem('od-lang') || 'en';
+    const dict = I18N[lang] || I18N.en;
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    document.getElementById('themeLabel').textContent = isDark ? dict['nav.themeLight'] : dict['nav.themeDark'];
+  }
+
+  /* UTC offset + last-deploy date — match index display */
+  (() => {
+    const d = new Date();
+    const offsetMin = -d.getTimezoneOffset();
+    const offHr = (offsetMin >= 0 ? '+' : '−') + Math.abs(Math.round(offsetMin/60));
+    const utc = document.getElementById('utc-offset');
+    if (utc) utc.textContent = offHr;
+    const fd = document.getElementById('footDate');
+    if (fd) fd.textContent = d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase();
+  })();
+
+  /* Lang switcher */
+  document.querySelectorAll('.lang-switch button').forEach(b => {
+    b.addEventListener('click', () => applyLang(b.dataset.lang));
+  });
+
+  /* Theme toggle (persists across page navigations via safeStorage) */
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    safeStorage.setItem('od-theme', next);
+    refreshTheme();
+  });
+
+  /* Restore persisted theme + lang */
+  const savedTheme = safeStorage.getItem('od-theme');
+  if (savedTheme) root.setAttribute('data-theme', savedTheme);
+  applyLang(safeStorage.getItem('od-lang') || 'en');
+
+  /* Crosshair cursor — matches index */
+  (() => {
+    const ch = document.getElementById('crosshair');
+    const dot = document.getElementById('chDot');
+    const chH = document.getElementById('chH');
+    const chV = document.getElementById('chV');
+    if (!ch || !dot) return;
+    let x = window.innerWidth/2, y = window.innerHeight/2;
+    function paint(){
+      chH.style.transform = `translateY(${y}px)`;
+      chV.style.transform = `translateX(${x}px)`;
+      dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    }
+    paint();
+    window.addEventListener('mousemove', e => { x = e.clientX; y = e.clientY; paint(); });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => dot.classList.add('is-hot'));
+      el.addEventListener('mouseleave', () => dot.classList.remove('is-hot'));
+    });
+  })();
+
+  (function xfRailMarkHover(){
+    function readAngle(el) {
+      const m = getComputedStyle(el).transform;
+      if (!m || m === 'none') return 0;
+      const v = m.match(/matrix\(([^)]+)\)/);
+      if (!v) return 0;
+      const [a, b] = v[1].split(',').map(parseFloat);
+      return Math.atan2(b, a) * 180 / Math.PI;
+    }
+    const shortestToZero = d => ((d % 360) + 540) % 360 - 180;
+    document.querySelectorAll('.rail__mark').forEach(el => {
+      const hex  = el.querySelector('.xf-hex');
+      const pent = el.querySelector('.xf-pent');
+      if (!hex || !pent) return;
+      const on = () => {
+        hex.style.transition = pent.style.transition = 'none';
+        hex.style.transform  = pent.style.transform  = '';
+        el.classList.add('xf-spinning');
+      };
+      const off = () => {
+        const ah = shortestToZero(readAngle(hex));
+        const ap = shortestToZero(readAngle(pent));
+        hex.style.transition = pent.style.transition = 'none';
+        hex.style.transform  = `rotate(${ah}deg)`;
+        pent.style.transform = `rotate(${ap}deg)`;
+        el.classList.remove('xf-spinning');
+        void el.offsetWidth;
+        requestAnimationFrame(() => {
+          hex.style.transition = pent.style.transition = '';
+          hex.style.transform  = pent.style.transform  = 'rotate(0deg)';
+        });
+      };
+      el.addEventListener('mouseenter', on);
+      el.addEventListener('mouseleave', off);
+      el.addEventListener('focus', on);
+      el.addEventListener('blur',  off);
+    });
+  })();
+  </script>
+</body>
+</html>

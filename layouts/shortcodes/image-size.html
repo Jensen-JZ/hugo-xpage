@@ -1,0 +1,10 @@
+{{- /*
+  Centered image with optional caption + width control.
+  Usage: {{< image-size src="…" width="50%" alt="…" caption="…" center="true" >}}
+*/ -}}
+{{- $center := eq (.Get "center") "true" -}}
+{{- $width := default "100%" (.Get "width") -}}
+<figure class="im{{ if $center }} im--center{{ end }}">
+  <img src="{{ .Get "src" }}" alt="{{ default "" (.Get "alt") }}" style="width: {{ $width }};" loading="lazy" />
+  {{- with .Get "caption" }}<figcaption class="im__cap">{{ . | safeHTML }}</figcaption>{{ end }}
+</figure>

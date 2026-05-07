@@ -1,0 +1,8 @@
+{{/* Outro section (block #08) — single phrase + attribution. Pure i18n, no data. */}}
+{{- $en := site.Data.i18n.en -}}
+<section class="block" id="outro">
+  <div class="outro reveal">
+    <h2 class="outro__phrase" data-i18n="outro.phrase" data-i18n-html>{{ index $en "outro.phrase" | safeHTML }}</h2>
+    <div class="outro__sub" data-i18n="outro.sub">{{ index $en "outro.sub" }}</div>
+  </div>
+</section>

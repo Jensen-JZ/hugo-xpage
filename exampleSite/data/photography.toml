@@ -1,0 +1,53 @@
+# Photography section (block #07) — selected frames as Live Photos.
+# `src` is the basename under static/assets/live/ (img+mov pair).
+# `total` is rendered into "F · NNN / TOTAL" labels.
+
+total = "06"
+
+[[frames]]
+num = "001"
+lens = "35mm"
+src = "terrain"
+alt = "Frame 001 — Terrain"
+captionTitle = "Terrain"
+captionMeta = "2026·01"
+
+[[frames]]
+num = "002"
+lens = "50mm"
+src = "scanline"
+alt = "Frame 002 — Scanline"
+captionTitle = "Scanline"
+captionMeta = "2026·01"
+
+[[frames]]
+num = "003"
+lens = "28mm"
+src = "grid-pulse"
+alt = "Frame 003 — Grid Pulse"
+captionTitle = "Grid Pulse"
+captionMeta = "2026·01"
+
+[[frames]]
+num = "004"
+lens = "iPhone"
+src = "disc-rotate"
+alt = "Frame 004 — Disc Rotate"
+captionTitle = "Disc Rotate"
+captionMeta = "2026·01"
+
+[[frames]]
+num = "005"
+lens = "50mm"
+src = "typewriter"
+alt = "Frame 005 — Typewriter"
+captionTitle = "Typewriter"
+captionMeta = "2026·01"
+
+[[frames]]
+num = "006"
+lens = "—"
+src = "glyphs"
+alt = "Frame 006 — Glyphs"
+captionTitle = "Glyphs"
+captionMeta = "2026·01"

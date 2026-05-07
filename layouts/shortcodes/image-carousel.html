@@ -1,0 +1,44 @@
+{{- /*
+  Image carousel with optional autoplay, captions, and counter.
+  Usage: {{< image-carousel width="80%" center="true" autoplay="true" interval="3000"
+    images="a.jpg|alt|caption, b.jpg|alt|caption" >}}
+*/ -}}
+{{- $center   := eq (.Get "center") "true" -}}
+{{- $width    := default "100%" (.Get "width") -}}
+{{- $autoplay := eq (.Get "autoplay") "true" -}}
+{{- $interval := default "5000" (.Get "interval") -}}
+{{- $caption  := .Get "caption" -}}
+{{- $images   := default "" (.Get "images") -}}
+{{- $items    := split $images "," -}}
+{{- $count    := len $items -}}
+<figure class="cr{{ if $center }} cr--center{{ end }}" style="width: {{ $width }};">
+  <div class="cr__view" data-carousel data-autoplay="{{ $autoplay }}" data-interval="{{ $interval }}" data-count="{{ $count }}">
+    <div class="cr__track">
+      {{- range $i, $raw := $items -}}
+        {{- $trimmed := trim $raw " \t\n\r" -}}
+        {{- $parts := split $trimmed "|" -}}
+        {{- $src := trim (index $parts 0) " \t\n\r" -}}
+        {{- $alt := "" -}}
+        {{- if gt (len $parts) 1 }}{{ $alt = trim (index $parts 1) " \t\n\r" }}{{ end -}}
+        {{- $cap := "" -}}
+        {{- if gt (len $parts) 2 }}{{ $cap = trim (index $parts 2) " \t\n\r" }}{{ end -}}
+        {{- /* a11y fallback: prefer explicit alt, then caption, then a generated index label */ -}}
+        {{- if eq $alt "" -}}
+          {{- if ne $cap "" -}}{{- $alt = $cap -}}
+          {{- else -}}{{- $alt = printf "Image %d of %d" (add $i 1) $count -}}{{- end -}}
+        {{- end -}}
+        <div class="cr__slide{{ if eq $i 0 }} is-active{{ end }}" data-index="{{ $i }}">
+          <img src="{{ $src }}" alt="{{ $alt }}" loading="lazy" />
+          {{- with $cap }}<span class="cr__slide-cap">{{ . | safeHTML }}</span>{{ end -}}
+        </div>
+      {{- end -}}
+    </div>
+    {{- if gt $count 1 -}}
+    <button type="button" class="cr__nav cr__nav--prev" data-carousel-prev aria-label="Previous">‹</button>
+    <button type="button" class="cr__nav cr__nav--next" data-carousel-next aria-label="Next">›</button>
+    <div class="cr__counter"><span data-carousel-current>{{ printf "%02d" 1 }}</span><span class="cr__counter-sep">/</span><span>{{ printf "%02d" $count }}</span></div>
+    <span class="cr__progress" data-carousel-progress aria-hidden="true"></span>
+    {{- end -}}
+  </div>
+  {{- with $caption }}<figcaption class="cr__cap">{{ . | safeHTML }}</figcaption>{{ end -}}
+</figure>

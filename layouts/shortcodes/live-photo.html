@@ -1,0 +1,20 @@
+{{- /*
+  Live photo: still image with a video that plays on hover or tap.
+  Usage: {{< live-photo src="img.png" video="vid.mov" width="70%" alt="…" caption="…" center="true" >}}
+*/ -}}
+{{- $center := eq (.Get "center") "true" -}}
+{{- $width := default "100%" (.Get "width") -}}
+<figure class="lp{{ if $center }} lp--center{{ end }}">
+  <div class="lp__art" data-livephoto style="width: {{ $width }};">
+    <img src="{{ .Get "src" }}" alt="{{ default "" (.Get "alt") }}" loading="lazy" />
+    <video data-src="{{ .Get "video" }}" muted playsinline preload="none" loop></video>
+    <span class="lp__badge" aria-label="Live Photo">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="8" cy="8" r="1.8" fill="currentColor"/>
+        <path d="M3.6 8a4.4 4.4 0 0 1 8.8 0M2 8a6 6 0 0 1 12 0"/>
+      </svg>
+      LIVE
+    </span>
+  </div>
+  {{- with .Get "caption" }}<figcaption class="lp__cap">{{ . | safeHTML }}</figcaption>{{ end }}
+</figure>

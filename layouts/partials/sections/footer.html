@@ -1,0 +1,7 @@
+{{/* Page footer. Copyright from params; deploy slot from JS at runtime. */}}
+{{- $en := site.Data.i18n.en -}}
+<footer>
+  <span>{{ site.Params.copyright }}</span>
+  <span class="center" data-i18n="footer.center">{{ index $en "footer.center" }}</span>
+  <span class="right"><span data-i18n="footer.deploy">{{ index $en "footer.deploy" }}</span> <b id="footDate">—</b></span>
+</footer>

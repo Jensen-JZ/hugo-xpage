@@ -1,0 +1,42 @@
+# "At a glance" key/value rows in the about section.
+# Each row: labelKey + (valueKey | rawValue), optional time + timeId.
+# valueHTML=true → render with safeHTML (preserves &nbsp; / <mark> etc.)
+# valueClass appends extra CSS class on the value cell.
+
+[[rows]]
+labelKey = "kv.now"
+valueKey = "kv.now.v"
+time = "—"
+timeId = "kvTime"
+
+[[rows]]
+labelKey = "kv.focus"
+valueKey = "kv.focus.v"
+time = "2026 –"
+
+[[rows]]
+labelKey = "kv.recent"
+valueKey = "kv.recent.v"
+valueHTML = true
+time = "2026"
+
+[[rows]]
+labelKey = "kv.based"
+rawValue = "City · City"
+time = "TZ / TZ"
+
+[[rows]]
+labelKey = "kv.stack"
+rawValue = "Lang · Lang · Lang · Lang"
+time = "—"
+
+[[rows]]
+labelKey = "kv.loves"
+valueKey = "kv.loves.v"
+time = "∞"
+
+[[rows]]
+labelKey = "kv.status"
+valueKey = "kv.status.v"
+valueClass = "accent"
+time = "2026"

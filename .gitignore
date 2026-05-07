@@ -1,0 +1,40 @@
+# Hugo build output and caches
+public/
+resources/
+.hugo_build.lock
+hugo_stats.json
+exampleSite/public/
+exampleSite/resources/
+exampleSite/.hugo_build.lock
+
+# Local development tooling
+.claude/
+.playwright-mcp/
+test-results/
+playwright-report/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json

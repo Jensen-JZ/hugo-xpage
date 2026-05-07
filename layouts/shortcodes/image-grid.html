@@ -1,0 +1,34 @@
+{{- /*
+  CSS-grid image gallery with optional aspect-ratio lock and per-item captions.
+  Usage: {{< image-grid columns="2" gap="2rem" maintain-ratio="true"
+    images="a.png|alt|caption, b.png|alt|caption" >}}
+*/ -}}
+{{- $columns := default "3" (.Get "columns") -}}
+{{- $gap     := default "1rem" (.Get "gap") -}}
+{{- $ratio   := eq (.Get "maintain-ratio") "true" -}}
+{{- $caption := .Get "caption" -}}
+{{- $images  := default "" (.Get "images") -}}
+{{- $items   := split $images "," -}}
+<figure class="gd{{ if $ratio }} gd--ratio{{ end }}" style="--gd-cols: {{ $columns }}; --gd-gap: {{ $gap }};">
+  <div class="gd__grid">
+    {{- range $i, $raw := $items -}}
+      {{- $trimmed := trim $raw " \t\n\r" -}}
+      {{- $parts := split $trimmed "|" -}}
+      {{- $src := trim (index $parts 0) " \t\n\r" -}}
+      {{- $alt := "" -}}
+      {{- if gt (len $parts) 1 }}{{ $alt = trim (index $parts 1) " \t\n\r" }}{{ end -}}
+      {{- $cap := "" -}}
+      {{- if gt (len $parts) 2 }}{{ $cap = trim (index $parts 2) " \t\n\r" }}{{ end -}}
+      {{- /* a11y fallback: prefer explicit alt, then caption, then generated index */ -}}
+      {{- if eq $alt "" -}}
+        {{- if ne $cap "" -}}{{- $alt = $cap -}}
+        {{- else -}}{{- $alt = printf "Image %d" (add $i 1) -}}{{- end -}}
+      {{- end -}}
+      <div class="gd__cell">
+        <img src="{{ $src }}" alt="{{ $alt }}" loading="lazy" />
+        {{- with $cap }}<span class="gd__cell-cap">{{ . | safeHTML }}</span>{{ end -}}
+      </div>
+    {{- end -}}
+  </div>
+  {{- with $caption }}<figcaption class="gd__cap">{{ . | safeHTML }}</figcaption>{{ end -}}
+</figure>

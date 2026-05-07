@@ -1,0 +1,39 @@
+{{/* Contact section (block #09). Pitch from i18n; link blocks from data/social.toml. */}}
+{{- $en := site.Data.i18n.en -}}
+<section class="block" id="contact">
+  <div class="section-head reveal">
+    <div class="meta"><span class="num">09</span><span data-i18n="nav.contact">{{ index $en "nav.contact" }}</span><span class="hairline" style="flex:1; height:1px; background: var(--hairline);"></span></div>
+  </div>
+
+  <div class="contact">
+    <h2 class="contact__pitch reveal" data-i18n="contact.pitch" data-i18n-html>{{ index $en "contact.pitch" | safeHTML }}</h2>
+
+    <div class="contact__row reveal delay-1">
+      <div class="contact__col">
+        <h4 data-i18n="contact.direct">{{ index $en "contact.direct" }}</h4>
+        <ul>
+          {{- range site.Data.social.direct }}
+          <li>
+            <a href="{{ .href }}">
+              <span>{{ .kind }}</span>
+              {{- if .labelKey }}
+              <span data-i18n="{{ .labelKey }}">{{ index $en .labelKey }}</span>
+              {{- else }}
+              {{ .label }}
+              {{- end }}
+            </a>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+      <div class="contact__col">
+        <h4 data-i18n="contact.social">{{ index $en "contact.social" }}</h4>
+        <ul>
+          {{- range site.Data.social.social }}
+          <li><a href="{{ .href }}"><span>{{ .kind }}</span>{{ .label }}</a></li>
+          {{- end }}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

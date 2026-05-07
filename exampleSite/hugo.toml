@@ -1,0 +1,64 @@
+baseURL = 'https://example.com/'
+languageCode = 'en-us'
+title = 'Your Name'
+theme = 'hugo-xpage'
+themesDir = '../..'
+uglyURLs = true
+disableKinds = ['taxonomy', 'term']
+enableRobotsTXT = true
+
+# Output Atom + RSS for the home page and section pages.
+[outputs]
+  home    = ['HTML', 'RSS']
+  section = ['HTML', 'RSS']
+
+[markup.goldmark.renderer]
+unsafe = true
+
+# Disable server-side Chroma highlighting — Prism.js handles syntax coloring on
+# the client.
+[markup.highlight]
+codeFences = false
+noClasses  = false
+
+[sitemap]
+  changefreq = 'weekly'
+  priority   = 0.7
+  filename   = 'sitemap.xml'
+
+[params]
+  # Site identity ─ replace these with your own
+  author          = 'Your Full Name'
+  authorFamiliar  = 'You'
+  handle          = '@yourhandle'
+  email           = 'hello@example.com'
+  mailto          = 'mailto:hello@example.com'
+  domain          = 'example.com'
+  homepage        = 'example.com'
+  homepageURL     = 'https://example.com'
+  blogURL         = 'https://example.com/blog'
+  blogFeedURL     = 'https://example.com/blog/index.xml'
+  defaultLang     = 'en'
+  avatar          = 'https://example.com/assets/avatar.png'
+
+  # SEO defaults
+  description     = 'A short description of your site that appears in search results and social cards.'
+  ogImage         = 'https://example.com/assets/og-card.png'
+  twitterHandle   = '@yourhandle'
+  keywords        = 'your, keywords, here'
+
+  # Hero — non-translated chips and aria copy
+  heroFirstName   = 'First'
+  heroLastName    = 'LASTNAME'
+  heroVer         = '01 · 2026'
+  heroTyper       = 'What you do · One short line'
+  heroBased       = 'City · City'
+  heroField       = 'Your field'
+  heroWorking     = 'Where you work'
+  heroChannel     = 'example.com'
+
+  # Chrome
+  navBrandPrimary = 'BRAND'
+  railVertical    = 'YOUR · NAME · 2026'
+  copyright       = '© 2026 · Your Name'
+  pageTitleSuffix = 'What you do · One short line'

@@ -1,0 +1,103 @@
+/* Code-block enhancement — runs after body content is in DOM.
+   1. Wraps every <pre><code class="language-X"> in a .codeblock shell.
+   2. Inserts a toolbar with language label + copy button.
+   3. Loads Prism.js on-demand if any language-X block exists, then highlights.
+   No-op for pages that don't have any code. */
+(function () {
+  var body = document.querySelector('.body');
+  if (!body) return;
+
+  var blocks = body.querySelectorAll('pre > code[class*="language-"]');
+  if (!blocks.length) return;
+
+  var seenLangs = {};
+
+  Array.prototype.forEach.call(blocks, function (code) {
+    var pre = code.parentElement;
+    if (!pre || pre.parentElement && pre.parentElement.classList.contains('codeblock')) return;
+
+    /* Extract language. */
+    var lang = '';
+    var m = (code.className || '').match(/language-([\w-]+)/);
+    if (m) { lang = m[1]; seenLangs[lang.toLowerCase()] = true; }
+
+    var shell = document.createElement('div');
+    shell.className = 'codeblock';
+
+    var bar = document.createElement('div');
+    bar.className = 'codeblock__bar';
+
+    var langSpan = document.createElement('span');
+    langSpan.className = 'codeblock__lang';
+    langSpan.textContent = lang || 'code';
+
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'codeblock__copy';
+    copyBtn.type = 'button';
+    copyBtn.textContent = 'copy';
+    copyBtn.addEventListener('click', function () {
+      var text = code.textContent || '';
+      var done = function () {
+        copyBtn.textContent = 'copied';
+        copyBtn.classList.add('is-done');
+        setTimeout(function () {
+          copyBtn.textContent = 'copy';
+          copyBtn.classList.remove('is-done');
+        }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () { done(); });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+
+    bar.appendChild(langSpan);
+    bar.appendChild(copyBtn);
+
+    pre.parentNode.insertBefore(shell, pre);
+    shell.appendChild(bar);
+    shell.appendChild(pre);
+  });
+
+  /* On-demand Prism.js for syntax highlighting. */
+  var langs = Object.keys(seenLangs);
+  if (!langs.length) return;
+
+  var prismCss = document.createElement('link');
+  prismCss.rel = 'stylesheet';
+  prismCss.href = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css';
+  document.head.appendChild(prismCss);
+
+  /* Suppress Prism core's auto-highlightAll: it scans the whole page and the
+     autoloader regex matches both language-X and lang-X classes, so our
+     i18n wrapper class triggers a 404 fetch for a non-existent language. */
+  window.Prism = window.Prism || {};
+  window.Prism.manual = true;
+
+  var prism = document.createElement('script');
+  prism.src = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js';
+  prism.onload = function () {
+    var auto = document.createElement('script');
+    auto.src = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js';
+    auto.onload = function () {
+      if (!window.Prism) return;
+      /* Highlight only our pre-detected pre > code.language-X blocks. Avoid
+         highlightAllUnder, which scans broadly and fetches phantom languages. */
+      blocks.forEach(function (code) {
+        if (typeof window.Prism.highlightElement === 'function') {
+          window.Prism.highlightElement(code);
+        }
+      });
+    };
+    document.head.appendChild(auto);
+  };
+  document.head.appendChild(prism);
+})();

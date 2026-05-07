@@ -1,0 +1,21 @@
+# Journey section (block #04) — chronological waypoints.
+
+[[nodes]]
+year = "2018"
+titleKey = "journey.2018.title"
+descKey = "journey.2018.desc"
+
+[[nodes]]
+year = "2022"
+titleKey = "journey.2022.title"
+descKey = "journey.2022.desc"
+
+[[nodes]]
+year = "2024"
+titleKey = "journey.2024.title"
+descKey = "journey.2024.desc"
+
+[[nodes]]
+year = "2026 — Now"
+titleKey = "journey.2025.title"
+descKey = "journey.2025.desc"

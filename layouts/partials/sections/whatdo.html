@@ -1,0 +1,27 @@
+{{/* What I do section (block #03). Three columns from data/whatdo.toml; AI col has a brand note. */}}
+{{- $en := site.Data.i18n.en -}}
+<section class="block" id="what-i-do">
+  <div class="section-head reveal">
+    <div class="meta"><span class="num">03</span><span data-i18n="whatdo.label">{{ index $en "whatdo.label" }}</span><span class="hairline" style="flex:1; height:1px; background: var(--hairline);"></span></div>
+    <h2 data-i18n="whatdo.h2">{{ index $en "whatdo.h2" }}</h2>
+    <p class="lede" data-i18n="whatdo.lede">{{ index $en "whatdo.lede" }}</p>
+  </div>
+  <div class="whatido reveal delay-1">
+    {{- range site.Data.whatdo.cols }}
+    <div class="whatido__col">
+      <div class="whatido__label" data-i18n="{{ .labelKey }}">{{ index $en .labelKey }}</div>
+      <h3 class="whatido__title" data-i18n="{{ .titleKey }}">{{ index $en .titleKey }}</h3>
+      <ul class="whatido__list">
+        {{- range .items }}
+        <li>{{ . }}</li>
+        {{- end }}
+      </ul>
+      {{- if .noteKey }}
+      <div class="whatido__note">
+        <b>{{ .noteBrand }}</b> · <span data-i18n="{{ .noteKey }}">{{ index $en .noteKey }}</span>
+      </div>
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+</section>

@@ -1,0 +1,27 @@
+name = "xpage"
+license = "MIT"
+licenselink = "https://github.com/Jensen-JZ/hugo-xpage/blob/main/LICENSE"
+description = "A black, white, and electric-yellow editorial-grade Hugo theme for personal sites and technical blogs. Multilingual (en/zh/tw) lang-blocks, on-demand KaTeX/Mermaid/Prism, click-to-lightbox images, Live Photo support, square-design contract."
+
+homepage = "https://github.com/Jensen-JZ/hugo-xpage"
+demosite = "https://github.com/Jensen-JZ/hugo-xpage"
+min_version = "0.123.0"
+
+tags = ["personal", "portfolio", "blog", "minimalist", "multilingual"]
+features = [
+  "multilingual (en/zh/tw)",
+  "dark mode",
+  "on-demand KaTeX",
+  "on-demand Mermaid",
+  "on-demand Prism syntax highlighting",
+  "5 image shortcodes",
+  "Live Photo gallery",
+  "click-to-lightbox",
+  "RSS + sitemap",
+  "Open Graph + Twitter Card",
+  "square-design contract"
+]
+
+[author]
+  name = "Jensen-JZ"
+  homepage = "https://github.com/Jensen-JZ"

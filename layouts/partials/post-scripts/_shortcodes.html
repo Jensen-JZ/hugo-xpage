@@ -1,0 +1,276 @@
+  /* Shared shortcode behaviour: live-photo + image-carousel */
+  (function () {
+    /* Live-photo: lazy-load video, fade in on hover/tap */
+    document.querySelectorAll('[data-livephoto]').forEach(function (root) {
+      var video = root.querySelector('video');
+      if (!video) return;
+      var loaded = false;
+      var ensureLoaded = function () {
+        if (loaded) return;
+        var src = video.getAttribute('data-src');
+        if (src) video.src = src;
+        loaded = true;
+      };
+      var play = function () {
+        ensureLoaded();
+        root.classList.add('is-active');
+        var p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {});
+      };
+      var stop = function () {
+        root.classList.remove('is-active');
+        try { video.pause(); video.currentTime = 0; } catch (e) {}
+      };
+      root.addEventListener('mouseenter', play);
+      root.addEventListener('mouseleave', stop);
+      root.addEventListener('touchstart', function (e) {
+        if (root.classList.contains('is-active')) { stop(); }
+        else { play(); e.preventDefault(); }
+      }, { passive: false });
+    });
+
+    /* Image-carousel: prev/next + autoplay + zero-padded counter + progress bar */
+    var pad2 = function (n) { return String(n).padStart(2, '0'); };
+    document.querySelectorAll('[data-carousel]').forEach(function (root) {
+      var slides = Array.prototype.slice.call(root.querySelectorAll('.cr__slide'));
+      var count = slides.length;
+      if (!count || count === 1) return;
+      var idx = 0;
+      var current = root.querySelector('[data-carousel-current]');
+      var progress = root.querySelector('[data-carousel-progress]');
+      var go = function (n) {
+        idx = (n + count) % count;
+        slides.forEach(function (s, i) { s.classList.toggle('is-active', i === idx); });
+        if (current) current.textContent = pad2(idx + 1);
+      };
+      var prev = root.querySelector('[data-carousel-prev]');
+      var next = root.querySelector('[data-carousel-next]');
+      if (prev) prev.addEventListener('click', function () { go(idx - 1); resetProgress(); });
+      if (next) next.addEventListener('click', function () { go(idx + 1); resetProgress(); });
+
+      var autoplay = root.getAttribute('data-autoplay') === 'true';
+      var interval = parseInt(root.getAttribute('data-interval'), 10) || 5000;
+      var tickTimer = null, progStart = 0, rafId = null;
+      var smoothstep = function (t) { return t * t * (3 - 2 * t); };
+      var renderProgress = function () {
+        if (!progress) return;
+        var elapsed = (performance.now() - progStart) % interval;
+        var pct = elapsed / interval;                    // 0 → 1 within current slide
+        var eased = smoothstep(pct);                     // ease-in/out width
+        // Fade band: first 8% fade in, last 8% fade out — anchor swap happens at opacity≈0.
+        // (Avoid less-than operators: Hugo safeJS escapes them across partial boundary.)
+        var opacity = Math.max(0, Math.min(1, pct / 0.08, (1 - pct) / 0.08));
+        // Alternating fill direction: even idx fills L→R, odd idx fills R→L.
+        progress.classList.toggle('is-rtl', idx % 2 !== 0);
+        progress.style.width = (eased * 100).toFixed(2) + '%';
+        progress.style.opacity = opacity.toFixed(3);
+        rafId = requestAnimationFrame(renderProgress);
+      };
+      var resetProgress = function () { progStart = performance.now(); };
+      var start = function () {
+        if (!autoplay || tickTimer) return;
+        progStart = performance.now();
+        tickTimer = setInterval(function () { go(idx + 1); resetProgress(); }, interval);
+        rafId = requestAnimationFrame(renderProgress);
+      };
+      var pause = function () {
+        if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        // Freeze bar where it is — RAF stop preserves last rendered width+opacity
+      };
+      if (autoplay) {
+        start();
+        root.addEventListener('mouseenter', pause);
+        root.addEventListener('mouseleave', start);
+      }
+    });
+  })();
+
+  /* Article-body lightbox: click any image inside .body to open the
+     centered chrome lightbox.
+       - Live photos: video lazy-attached and played on HOVER (matches
+         inline behavior), not auto-played on open.
+       - Carousels: prev/next chrome buttons + ←/→ keyboard navigation
+         operate on the source carousel's slide list.
+       - body.lightbox-open class drives crosshair-hide / cursor-restore.
+     Note: avoid less-than operators across the safeJS boundary. */
+  (function articleLightbox(){
+    var box = document.getElementById('photoLightbox');
+    var article = document.querySelector('article .body');
+    if (!box || !article) return;
+    var media = box.querySelector('#lightboxMedia');
+    var cap = box.querySelector('#lightboxCap');
+    var closeBtn = box.querySelector('#lightboxClose');
+    var prevBtn = box.querySelector('#lightboxPrev');
+    var nextBtn = box.querySelector('#lightboxNext');
+
+    /* Carousel context — when opened from a .cr__slide we record the
+       full slide list so prev/next can swap content in place. */
+    var ctx = { slides: null, idx: 0 };
+
+    function captionFor(host){
+      var cur = host;
+      var depth = 0;
+      while (cur && depth !== 6) {
+        var sib = cur.querySelector(':scope > .lp__cap, :scope > .cr__cap, :scope > .gd__cap, :scope > .im__cap, :scope > figcaption, :scope > .cr__slide-cap');
+        if (sib) return sib.textContent.trim();
+        cur = cur.parentElement;
+        depth = depth + 1;
+      }
+      return '';
+    }
+
+    function clearMedia(){
+      var v = media.querySelector('video');
+      if (v) { try { v.pause(); } catch(e){} }
+      media.innerHTML = '';
+      media.classList.remove('is-playing');
+    }
+
+    /* Render a single slot — img + optional hover-played video + LIVE badge. */
+    function renderSlot(slot){
+      clearMedia();
+      var im = document.createElement('img');
+      im.src = slot.imgSrc;
+      im.alt = slot.alt || '';
+      media.appendChild(im);
+      if (slot.videoSrc) {
+        var v = document.createElement('video');
+        v.muted = true;
+        v.playsInline = true;
+        v.loop = true;
+        v.preload = 'metadata';
+        v.src = slot.videoSrc;
+        media.appendChild(v);
+        /* LIVE badge — 1:1 SVG copy of inline .lp__badge / .frame__live-badge
+           (concentric upward arcs + center dot, viewBox 16x16). */
+        var badge = document.createElement('span');
+        badge.className = 'lightbox__badge';
+        badge.setAttribute('aria-label', 'Live Photo');
+        badge.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="1.8" fill="currentColor"/><path d="M3.6 8a4.4 4.4 0 0 1 8.8 0M2 8a6 6 0 0 1 12 0"/></svg>LIVE';
+        media.appendChild(badge);
+      }
+      var b = cap.querySelector('b');
+      var s = cap.querySelector('span');
+      b.textContent = slot.title || '';
+      s.textContent = slot.subtitle || '';
+      cap.classList.toggle('is-empty', !slot.title && !slot.subtitle);
+    }
+
+    /* Shape an arbitrary host element into a uniform slot descriptor. */
+    function slotFromHost(host){
+      var img = host.querySelector('img');
+      if (!img) return null;
+      var lp = host.matches('[data-livephoto], .lp__art')
+        ? host
+        : host.querySelector('[data-livephoto], .lp__art');
+      var videoSrc = '';
+      if (lp) {
+        var v = lp.querySelector('video');
+        if (v) videoSrc = v.getAttribute('data-src') || v.getAttribute('src') || '';
+      }
+      return {
+        imgSrc: img.getAttribute('src'),
+        alt: img.getAttribute('alt') || '',
+        videoSrc: videoSrc,
+        title: '',
+        subtitle: captionFor(host) || (img.getAttribute('alt') || '')
+      };
+    }
+
+    function refreshNavVisibility(){
+      var hasMany = ctx.slides && ctx.slides.length > 1;
+      prevBtn.hidden = !hasMany;
+      nextBtn.hidden = !hasMany;
+    }
+
+    function go(delta){
+      if (!ctx.slides || ctx.slides.length === 0) return;
+      var n = ctx.slides.length;
+      ctx.idx = (ctx.idx + delta + n) % n;
+      var slot = slotFromHost(ctx.slides[ctx.idx]);
+      if (slot) renderSlot(slot);
+    }
+
+    function open(slot, carouselCtx){
+      renderSlot(slot);
+      ctx = carouselCtx || { slides: null, idx: 0 };
+      refreshNavVisibility();
+      box.classList.add('is-open');
+      box.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lightbox-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function close(){
+      box.classList.remove('is-open');
+      box.setAttribute('aria-hidden', 'true');
+      clearMedia();
+      document.body.classList.remove('lightbox-open');
+      document.body.style.overflow = '';
+      ctx = { slides: null, idx: 0 };
+    }
+
+    /* Hover-play for live-photo videos inside the lightbox. Each
+       mouseenter re-arms is-ready + is-playing (no { once:true } —
+       second hover MUST re-trigger). */
+    function startVideo(){
+      var v = media.querySelector('video');
+      if (!v) return;
+      v.classList.add('is-ready');
+      media.classList.add('is-playing');
+      var p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(function(){});
+    }
+    function stopVideo(){
+      var v = media.querySelector('video');
+      if (!v) return;
+      try { v.pause(); v.currentTime = 0; } catch(e){}
+      v.classList.remove('is-ready');
+      media.classList.remove('is-playing');
+    }
+    media.addEventListener('mouseenter', startVideo);
+    media.addEventListener('mouseleave', stopVideo);
+    /* Touch fallback — tap toggles play/pause since hover doesn't fire. */
+    media.addEventListener('touchstart', function(e){
+      var v = media.querySelector('video');
+      if (!v) return;
+      if (v.paused) startVideo(); else stopVideo();
+      e.preventDefault();
+    }, { passive: false });
+
+    article.addEventListener('click', function(e){
+      var img = e.target.closest('img');
+      if (!img) return;
+      if (img.closest('a[href]')) return;
+
+      /* Carousel context: if the image is inside a .cr__view, build the
+         slide list so the lightbox shows prev/next nav. */
+      var carouselCtx = null;
+      var crView = img.closest('.cr__view');
+      if (crView) {
+        var slides = Array.prototype.slice.call(crView.querySelectorAll('.cr__slide'));
+        var clickedSlide = img.closest('.cr__slide');
+        var idx = slides.indexOf(clickedSlide);
+        if (idx === -1) idx = 0;
+        carouselCtx = { slides: slides, idx: idx };
+      }
+
+      var host = img.closest('.lp__art, [data-livephoto], .cr__slide, .gd__cell, .im, figure') || img.parentElement;
+      var slot = slotFromHost(host);
+      if (!slot) return;
+      open(slot, carouselCtx);
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (prevBtn) prevBtn.addEventListener('click', function(e){ go(-1); e.stopPropagation(); });
+    if (nextBtn) nextBtn.addEventListener('click', function(e){ go(1); e.stopPropagation(); });
+    box.addEventListener('click', function(e){ if (e.target === box) close(); });
+    document.addEventListener('keydown', function(e){
+      if (!box.classList.contains('is-open')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') go(-1);
+      else if (e.key === 'ArrowRight') go(1);
+    });
+  })();

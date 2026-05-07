@@ -1,0 +1,38 @@
+# Contact section (block #09) — direct + social link blocks.
+# Each entry: kind (sub-label), href (clickable target), and either label
+# (untranslated literal like an @handle) or labelKey (i18n lookup).
+
+[[direct]]
+kind = "email"
+href = "mailto:hello@example.com"
+label = "hello@example.com"
+
+[[direct]]
+kind = "homepage"
+href = "https://example.com"
+label = "example.com"
+
+[[direct]]
+kind = "rss"
+href = "https://example.com/blog/index.xml"
+labelKey = "contact.rss"
+
+[[social]]
+kind = "github"
+href = "https://github.com/yourhandle"
+label = "@yourhandle"
+
+[[social]]
+kind = "x · twitter"
+href = "https://twitter.com/yourhandle"
+label = "@yourhandle"
+
+[[social]]
+kind = "linkedin"
+href = "https://www.linkedin.com/in/yourhandle/"
+label = "/in/yourhandle"
+
+[[social]]
+kind = "instagram"
+href = "https://www.instagram.com/yourhandle/"
+label = "@yourhandle"
