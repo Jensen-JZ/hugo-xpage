@@ -188,11 +188,11 @@ stateDiagram-v2
 
 ### 5.1 image-size
 
-{{< image-size src="https://picsum.photos/seed/ettitlepng/800/500" alt="Sample diagram alt text" caption="image-size shortcode — single figure with caption + click-to-lightbox." center="true" >}}
+{{< image-size src="https://picsum.photos/seed/demoSingle/800/500" alt="Sample diagram alt text" caption="image-size shortcode — single figure with caption + click-to-lightbox." center="true" >}}
 
 ### 5.2 image-grid
 
-{{< image-grid columns="2" gap="1rem" images="https://picsum.photos/seed/bayern2jpg/800/500||Sample image A, https://picsum.photos/seed/bayern3jpg/800/500||Sample image B" >}}
+{{< image-grid columns="2" gap="1rem" images="https://picsum.photos/seed/demoGridA/800/500||Sample image A, https://picsum.photos/seed/demoGridB/800/500||Sample image B" >}}
 
 ### 5.3 image-carousel
 
@@ -201,7 +201,7 @@ stateDiagram-v2
     center="true"
     autoplay="false"
     caption="image-carousel shortcode — manual navigation, lightbox-aware."
-    images="https://picsum.photos/seed/rlaken2jpg/800/500, https://picsum.photos/seed/rlaken3jpg/800/500, https://picsum.photos/seed/rlaken4jpg/800/500" >}}
+    images="https://picsum.photos/seed/demoCarA/800/500, https://picsum.photos/seed/demoCarB/800/500, https://picsum.photos/seed/demoCarC/800/500" >}}
 
 ### 5.4 live-photo
 
@@ -348,11 +348,11 @@ stateDiagram-v2
 
 ### 5.1 image-size
 
-{{< image-size src="https://picsum.photos/seed/ettitlepng/800/500" alt="示例图替换文本" caption="image-size — 单图 + caption + 点击进入大图模式。" center="true" >}}
+{{< image-size src="https://picsum.photos/seed/demoSingle/800/500" alt="示例图替换文本" caption="image-size — 单图 + caption + 点击进入大图模式。" center="true" >}}
 
 ### 5.2 image-grid
 
-{{< image-grid columns="2" gap="1rem" images="https://picsum.photos/seed/bayern2jpg/800/500||示例图 A, https://picsum.photos/seed/bayern3jpg/800/500||示例图 B" >}}
+{{< image-grid columns="2" gap="1rem" images="https://picsum.photos/seed/demoGridA/800/500||示例图 A, https://picsum.photos/seed/demoGridB/800/500||示例图 B" >}}
 
 ### 5.3 image-carousel
 
@@ -361,7 +361,7 @@ stateDiagram-v2
     center="true"
     autoplay="false"
     caption="image-carousel — 手动切换，与大图模式联动。"
-    images="https://picsum.photos/seed/rlaken2jpg/800/500, https://picsum.photos/seed/rlaken3jpg/800/500, https://picsum.photos/seed/rlaken4jpg/800/500" >}}
+    images="https://picsum.photos/seed/demoCarA/800/500, https://picsum.photos/seed/demoCarB/800/500, https://picsum.photos/seed/demoCarC/800/500" >}}
 
 ### 5.4 live-photo
 
@@ -508,11 +508,11 @@ stateDiagram-v2
 
 ### 5.1 image-size
 
-{{< image-size src="https://picsum.photos/seed/ettitlepng/800/500" alt="範例圖替換文字" caption="image-size — 單圖 + caption + 點擊進入大圖模式。" center="true" >}}
+{{< image-size src="https://picsum.photos/seed/demoSingle/800/500" alt="範例圖替換文字" caption="image-size — 單圖 + caption + 點擊進入大圖模式。" center="true" >}}
 
 ### 5.2 image-grid
 
-{{< image-grid columns="2" gap="1rem" images="https://picsum.photos/seed/bayern2jpg/800/500||範例圖 A, https://picsum.photos/seed/bayern3jpg/800/500||範例圖 B" >}}
+{{< image-grid columns="2" gap="1rem" images="https://picsum.photos/seed/demoGridA/800/500||範例圖 A, https://picsum.photos/seed/demoGridB/800/500||範例圖 B" >}}
 
 ### 5.3 image-carousel
 
@@ -521,7 +521,7 @@ stateDiagram-v2
     center="true"
     autoplay="false"
     caption="image-carousel — 手動切換，與大圖模式聯動。"
-    images="https://picsum.photos/seed/rlaken2jpg/800/500, https://picsum.photos/seed/rlaken3jpg/800/500, https://picsum.photos/seed/rlaken4jpg/800/500" >}}
+    images="https://picsum.photos/seed/demoCarA/800/500, https://picsum.photos/seed/demoCarB/800/500, https://picsum.photos/seed/demoCarC/800/500" >}}
 
 ### 5.4 live-photo
 

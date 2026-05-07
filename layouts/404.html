@@ -203,13 +203,13 @@
         </g>
       </svg>
     </a>
-    <div class="rail__vert">JINGYAO · ZHANG · 2026</div>
+    <div class="rail__vert">{{ site.Params.railVertical | default site.Title }}</div>
   </aside>
 
   <!-- Top nav (matches index) -->
   <nav class="nav">
     <div class="shell nav__row">
-      <a href="index.html" class="nav__brand">JENSEN <span>/ @bitbeats</span></a>
+      <a href="index.html" class="nav__brand">{{ site.Params.navBrandPrimary | default site.Title }} <span>/ {{ site.Params.handle | default "" }}</span></a>
       <div class="nav__links">
         <a href="index.html#about"><span>01</span><b data-i18n="nav.about">About</b></a>
         <a href="index.html#writing"><span>02</span><b data-i18n="nav.writing">Writing</b></a>

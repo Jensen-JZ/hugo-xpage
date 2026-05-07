@@ -6,8 +6,7 @@ shortcodes plus on-demand KaTeX, Mermaid, and Prism syntax highlighting that loa
 when a page actually uses them. Square-design contract — no rounded chrome buttons,
 custom crosshair cursor, click-to-lightbox on every image, Live Photo with hover-play.
 
-> A live reference implementation lives at [github.com/Jensen-JZ/XPage](https://github.com/Jensen-JZ/XPage)
-> (`https://peritrix.com`).
+> Live demo: [peritrix.com](https://peritrix.com).
 
 ---
 
