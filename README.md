@@ -6,6 +6,8 @@ shortcodes plus on-demand KaTeX, Mermaid, and Prism syntax highlighting that loa
 when a page actually uses them. Square-design contract — no rounded chrome buttons,
 custom crosshair cursor, click-to-lightbox on every image, Live Photo with hover-play.
 
+![hugo-xpage homepage screenshot](images/screenshot.png)
+
 > Live demo: [peritrix.com](https://peritrix.com).
 
 ---
